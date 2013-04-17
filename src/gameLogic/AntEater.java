@@ -2,7 +2,7 @@ package gameLogic;
 
 public class AntEater extends Item {
 
-	private int hunger;
+	public int hunger; //csak a protoban, egyébként private
 	private Field nbField = null;
 	
 	AntEater(Field field) {
@@ -21,6 +21,9 @@ public class AntEater extends Item {
 		System.out.println("\t\tanteater - arrivedHome()");
 		System.out.println("\t\t\tf - deregister()");
 		this.field.deregister();
+	}
+	public void push(){
+		
 	}
 
 	@Override
@@ -54,6 +57,12 @@ public class AntEater extends Item {
 
 	@Override
 	public void killerSprayInteract() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void stoneInteract() {
 		// TODO Auto-generated method stub
 		
 	}

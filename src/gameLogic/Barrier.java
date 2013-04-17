@@ -31,4 +31,10 @@ public class Barrier extends Item {
 		
 	}
 
+	@Override
+	public void stoneInteract() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

@@ -2,7 +2,7 @@ package gameLogic;
 
 public class Odor {
 
-	private int ant = 0;
+	public int ant = 0; //csak a protoban, egyébként private
 	private int food = 0;
 	private int hill = 0;
 	private int colony = 0;

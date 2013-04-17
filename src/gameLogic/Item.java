@@ -16,4 +16,6 @@ public abstract class Item implements ItemManagableByItem {
 
 	public abstract void killerSprayInteract();
 	
+	public abstract void stoneInteract();
+	
 }

@@ -2,8 +2,8 @@ package gameLogic;
 
 public class Ant extends Item {
 
-	private boolean carry = false;
-	private Food carriedItem = null;
+	public boolean carry = false; //csak a protoban, egyébként private
+	public Food carriedItem = null; //csak a protoban, egyébként private
 	private Field nbField = null;
 	
 	Ant(Field field) {
@@ -66,5 +66,12 @@ public class Ant extends Item {
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public void stoneInteract() {
+		// TODO Auto-generated method stub
+		
+	}
+	
 
 }

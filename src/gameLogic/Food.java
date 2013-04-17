@@ -33,4 +33,10 @@ public class Food extends Item {
 		// TODO Auto-generated method stub
 	}
 
+	@Override
+	public void stoneInteract() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

@@ -7,7 +7,7 @@ public class Field {
 
 	private List<Field> neighbours;
 	private Odor odor;
-	protected Item item = null;
+	protected Item item = null; //miért lett ez protected ? ha protected minek a getItem ?
 	
 	Field() {
 		this.odor = new Odor();
