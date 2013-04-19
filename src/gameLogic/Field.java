@@ -3,11 +3,17 @@ package gameLogic;
 import java.util.ArrayList;
 import java.util.List;
 
+/***********
+	 0 1   
+	5 I 2
+	 4 3
+ ***********/
+
 public class Field {
 
 	private List<Field> neighbours;
 	private Odor odor;
-	protected Item item = null; //miért lett ez protected ? ha protected minek a getItem ?
+	private Item item = null;
 	
 	Field() {
 		this.odor = new Odor();

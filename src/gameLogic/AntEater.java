@@ -1,70 +1,123 @@
 package gameLogic;
 
-public class AntEater extends Item {
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
 
-	public int hunger; //csak a protoban, egyébként private
+public class AntEater extends Item { // ready
+
+	private int hunger;
 	private Field nbField = null;
+	private int fromWhere; // TODO új attibrútum!
 	
 	AntEater(Field field) {
 		super(field);
 	}
 	
+	AntEater(Field field, int hunger) {
+		super(field);
+		this.hunger = hunger;
+	}
+	
 	public void eat() {
-		System.out.println("\t\tanteater - eat()");
-		System.out.println("\t\t\tf - deregister()");
-		this.field.deregister();
-		System.out.println("\t\t\ts - register()");
-		this.nbField.register(this);
+		this.dereg();
+		this.reg();
+		this.hunger--;
 	}
 
 	public void arrivedHome() {
-		System.out.println("\t\tanteater - arrivedHome()");
-		System.out.println("\t\t\tf - deregister()");
-		this.field.deregister();
+		if (this.hunger <= 0)
+			this.dereg();
 	}
 	public void push(){
-		
+		this.dereg();
+		this.reg();
 	}
 
 	@Override
 	public void act() {
-		System.out.println("hs - act()");
 		
-		this.nbField = this.field.getNeighbour(0);
-		Odor o = this.nbField.getOdor();
-		ItemManagableByItem i = this.nbField.getItem();
+		this.nbField = this.chooseByOdor();
 		
-		if (i != null)
-			i.antEaterInteract(this);
-		else {
-			System.out.println("\tf - deregister()");
-			this.field.deregister();
-			System.out.println("\ts - register()");
-			this.nbField.register(this);
+		if (this.nbField != null) {
+			ItemManagableByItem i = this.nbField.getItem();
+			
+			if (i != null)
+				i.antEaterInteract(this);
+			else {
+				this.dereg();
+				this.reg();
+			}
 		}
+	}
+	
+	private Field chooseByOdor() { // TODO új fvény
+		
+		Field chosen = null;
+		Odor o = null;
+		int oddsSoFar = 0;
+		
+		/// calculate odds
+		Map<Field, Integer> odds = new HashMap<Field, Integer>();
+		for (int i=0; i<6; ++i) {
+			this.nbField = this.field.getNeighbour(i);
+			if (this.nbField != null) {
+				o = this.nbField.getOdor();
+				if (this.hunger <= 0) // if not hungry, goes to colony
+					oddsSoFar += o.getColony();
+				else
+					oddsSoFar += o.getAnt();
+				odds.put(this.nbField, oddsSoFar);
+			}
+		}
+		
+		/// rand
+		Random gen = new Random();
+		int randomNum = gen.nextInt(oddsSoFar);
+		
+		for (Map.Entry<Field, Integer> entry : odds.entrySet()) {
+			if (randomNum <= entry.getValue()) {
+				return entry.getKey();
+			}
+		}
+		
+		return null; // cannot happen
 	}
 
 	@Override
 	public void antInteract(Ant ant) {
-		System.out.println("\tanteater - antInteract(ant)");
 		ant.eaten();
+		this.hunger--;
 	}
 
 	@Override
 	public void antEaterInteract(AntEater antEater) {
-		System.out.println("\ti - antEaterInteract(hs)");
+		// nothing happens here
 	}
 
 	@Override
 	public void killerSprayInteract() {
-		// TODO Auto-generated method stub
-		
+		// nothing happens here
 	}
 
 	@Override
-	public void stoneInteract() {
-		// TODO Auto-generated method stub
-		
+	public void stoneInteract(Stone stone) {
+		// nothing happens here
 	}
-
+	
+	public int getFromWhere() { // TODO új fvény!
+		return this.fromWhere;
+	}
+	
+	private void reg() { // TODO új fvény!
+		this.nbField.register(this);
+		this.field = this.nbField;
+		this.nbField = null;
+	}
+	
+	private void dereg() { // TODO új fvény
+		this.field.deregister();
+		this.field = null;
+	}
+	
 }

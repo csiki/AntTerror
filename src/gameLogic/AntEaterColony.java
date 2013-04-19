@@ -6,11 +6,10 @@ public class AntEaterColony extends Item {
 	private int timeBetweenRelease;
 	private int countdownToRelease;
 	
-	AntEaterColony(Field field) {
+	AntEaterColony(Field field, int timeBetweenRelease, Field spawnField) {
 		super(field);
-		// TODO Auto-generated constructor stub
+		this.spawnField = spawnField;
 	}
-	
 	
 	@Override
 	public void act() {
@@ -19,25 +18,21 @@ public class AntEaterColony extends Item {
 	}
 	@Override
 	public void antInteract(Ant ant) {
-		System.out.println("\ti - antInteract(ant)");
-		
+		// nothing happens here
 	}
 	@Override
 	public void antEaterInteract(AntEater antEater) {
-		System.out.println("\tanteatercol - antEaterInteract(anteater)");
 		antEater.arrivedHome();
 	}
 	@Override
 	public void killerSprayInteract() {
-		// TODO Auto-generated method stub
-		
+		// nothing happens here
 	}
 
 
 	@Override
-	public void stoneInteract() {
-		// TODO Auto-generated method stub
-		
+	public void stoneInteract(Stone stone) {
+		// nothing happens here
 	}
 
 }

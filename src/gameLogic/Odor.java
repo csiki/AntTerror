@@ -1,8 +1,22 @@
 package gameLogic;
 
-public class Odor {
-
-	public int ant = 0; //csak a protoban, egyébként private
+public class Odor { // ready
+	
+	Odor(int ant, int food, int hill, int colony) {
+		this.ant = ant;
+		this.food = food;
+		this.hill = hill;
+		this.colony = colony;
+	}
+	
+	Odor() {
+		this.ant = 0;
+		this.food = 0;
+		this.hill = 0;
+		this.colony = 0;
+	}
+	
+	private int ant = 0; //csak a protoban, egyébként private
 	private int food = 0;
 	private int hill = 0;
 	private int colony = 0;

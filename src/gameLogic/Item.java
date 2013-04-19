@@ -1,6 +1,6 @@
 package gameLogic;
 
-public abstract class Item implements ItemManagableByItem {
+public abstract class Item implements ItemManagableByItem { // ready
 
 	protected Field field;
 	
@@ -16,6 +16,6 @@ public abstract class Item implements ItemManagableByItem {
 
 	public abstract void killerSprayInteract();
 	
-	public abstract void stoneInteract();
+	public abstract void stoneInteract(Stone stone); // TODO változtatás: +argumentum
 	
 }
