@@ -4,14 +4,15 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
-public class AntEater extends Item { // ready
+public class AntEater extends Item {
 
 	private int hunger;
 	private Field nbField = null;
-	private int fromWhere; // TODO új attibrútum!
+	private int fromWhere; // TODO új attibrútum! SEEMMI NEM ÁLLÍTJA BE !!!!!
 	
 	AntEater(Field field) {
 		super(field);
+		this.hunger = 10;
 	}
 	
 	AntEater(Field field, int hunger) {

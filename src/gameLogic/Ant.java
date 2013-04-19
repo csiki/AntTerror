@@ -26,7 +26,8 @@ public class Ant extends Item { // ready
 	}
 
 	public void arrivedHome() {
-		this.dereg();
+		if (this.carry)
+			this.dereg();
 	}
 
 	@Override

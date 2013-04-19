@@ -1,9 +1,9 @@
 package gameLogic;
 
-public class Stone extends Item { // ready
+public class Stone extends Item {
 	
 	private Field nbField = null;
-	private int fromWhere; // TODO új attibrútum
+	private int fromWhere; // TODO új attibrútum! SEEMMI NEM ÁLLÍTJA BE !!!!!
 	
 	Stone(Field field) {
 		super(field);
