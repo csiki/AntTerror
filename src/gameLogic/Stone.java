@@ -1,9 +1,9 @@
 package gameLogic;
 
-public class Stone extends Item {
+public class Stone extends Item { // ready
 	
 	private Field nbField = null;
-	private int fromWhere; // TODO új attibrútum! SEEMMI NEM ÁLLÍTJA BE !!!!!
+	private int fromWhere; // TODO új attibrútum!
 	
 	Stone(Field field) {
 		super(field);
@@ -30,8 +30,8 @@ public class Stone extends Item {
 	@Override
 	public void antEaterInteract(AntEater antEater) {
 		int comesFrom = antEater.getFromWhere();
-		int furtherTo = (comesFrom + 3) % 6;
-		this.nbField = this.field.getNeighbour(furtherTo);
+		this.fromWhere = (comesFrom + 3) % 6;
+		this.nbField = this.field.getNeighbour(this.fromWhere);
 		ItemManagableByItem item = this.nbField.getItem();
 		
 		if (item != null)

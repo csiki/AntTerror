@@ -27,7 +27,7 @@ public class AntEaterColony extends Item { // ready
 	public void act() {
 		this.countdownToRelease--;
 		
-		if (this.countdownToRelease == 0) {
+		if (this.countdownToRelease <= 0) {
 			this.spawnField.register(new AntEater(this.spawnField));
 			this.countdownToRelease = timeBetweenRelease;
 		}

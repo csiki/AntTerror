@@ -4,11 +4,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
-public class AntEater extends Item {
+public class AntEater extends Item { // ready
 
 	private int hunger;
 	private Field nbField = null;
-	private int fromWhere; // TODO új attibrútum! SEEMMI NEM ÁLLÍTJA BE !!!!!
+	private int fromWhere; // TODO új attibrútum!
 	
 	AntEater(Field field) {
 		super(field);
@@ -69,17 +69,21 @@ public class AntEater extends Item {
 				else
 					oddsSoFar += o.getAnt();
 				odds.put(this.nbField, oddsSoFar);
+			} else { // fromWhere got to be recovered <-- odds.size() = neighbours.size()
+				odds.put(null, 0);
 			}
 		}
 		
 		/// rand
 		Random gen = new Random();
 		int randomNum = gen.nextInt(oddsSoFar);
+		this.fromWhere = 0;
 		
 		for (Map.Entry<Field, Integer> entry : odds.entrySet()) {
 			if (randomNum <= entry.getValue()) {
 				return entry.getKey();
 			}
+			this.fromWhere++;
 		}
 		
 		return null; // cannot happen

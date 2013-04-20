@@ -1,7 +1,7 @@
 package gameLogic;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
 /***********
 	 0 1   
@@ -9,18 +9,25 @@ import java.util.List;
 	 4 3
  ***********/
 
-public class Field {
+public class Field { // ready
 
-	private List<Field> neighbours;
-	private Odor odor;
+	private Vector<Field> neighbours = new Vector<Field>(6);
+	private Odor odor = new Odor();
 	private Item item = null;
 	
-	Field() {
-		this.odor = new Odor();
-		this.neighbours = new ArrayList<Field>();
-	}
+	Field() {}
 
 	public void decreaseAntOdor() {
+		int ant, food, hill, colony;
+		
+		ant = this.odor.getAnt();
+		food = this.odor.getFood();
+		hill = this.odor.getHill();
+		colony = this.odor.getColony();
+		
+		ant = (ant <= 0) ? (ant=0) : --ant; // ant odor decreased
+		
+		this.odor = new Odor(ant, food, hill, colony);
 	}
 
 	public void register(Item item) {
@@ -32,25 +39,30 @@ public class Field {
 	}
 
 	public ItemManagableByItem getItem() {
-		System.out.println("\ts - getItem()");
 		return this.item;
 	}
 
 	public Odor getOdor() {
-		System.out.println("\ts - getOdor()");
 		return this.odor;
 	}
 	
-	public void addNeighbour(Field nb) {
-		this.neighbours.add(nb);
+	public void addNeighbour(Field nb, int place) {
+		this.neighbours.add(place, nb);
 	}
 
 	public Field getNeighbour(int index) {
-		System.out.println("\tf - getNeighbour(int)");
 		return this.neighbours.get(index);
 	}
 
 	public void dropOdor(Odor smell) {
+		int ant, food, hill, colony;
+		
+		ant = this.odor.getAnt() + smell.getAnt();
+		food = this.odor.getFood() + smell.getFood();
+		hill = this.odor.getHill() + smell.getHill();
+		colony = this.odor.getColony() + smell.getColony();
+		
+		this.odor = new Odor(ant, food, hill, colony);
 	}
 
 }

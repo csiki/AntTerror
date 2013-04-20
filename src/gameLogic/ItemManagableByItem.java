@@ -1,6 +1,6 @@
 package gameLogic;
 
-public interface ItemManagableByItem {
+public interface ItemManagableByItem { // ready
 	public void antInteract(Ant ant);
 	public void antEaterInteract(AntEater antEater);
 	public void killerSprayInteract();

@@ -1,16 +1,57 @@
 package gameLogic;
 
-public class Food extends Item {
-
+public class Food extends Item { // ready
+	
+	private boolean firstRound = true; // TODO új attibrútum
+	
 	Food(Field field) {
 		super(field);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
 	public void act() {
-		// TODO Auto-generated method stub
+		if (this.firstRound) {
+			this.firstRound = false;
+			this.spreadFoodOdor(this.field, 3, 0, 100); // 100 odor to spread
+			// TODO az ilyen konstansokat Game public statikus final változokká !
+		}
+	}
+	
+	/**
+	 * Spread food odor recursively.
+	 * @param field current field to drop odor
+	 * @param mode 3: spread in all directions; 2: spread forward and to the first left; 1: spread forward
+	 * @param from direction of the food
+	 * @param odor amount of food odor to drop
+	 */
+	private void spreadFoodOdor(Field field, int mode, int to, int odor) { // TODO új fvény!
 		
+		if (odor <= 0)
+			return;
+		
+		field.dropOdor(new Odor(0, odor, 0, 0));
+		
+		if (mode == 3) {
+			
+			for (int i=0; i<6; ++i)
+				if (field.getNeighbour(i) != null)
+					spreadFoodOdor(field.getNeighbour(i), mode-1, i, odor-1);
+			
+		} else if (mode == 2) {
+			
+			if (field.getNeighbour(to) != null) // forward, inherit mode 2
+				spreadFoodOdor(field.getNeighbour(to), mode, to, odor-1);
+			
+			to = (to == 0) ? to = 5 : to - 1;
+			if (field.getNeighbour(to) != null) // to the left, mode-1
+				spreadFoodOdor(field.getNeighbour(to), mode-1, to, odor-1);
+			
+		} else if (mode == 1) {
+			
+			if (field.getNeighbour(to) != null) // forward, inherit mode 1
+				spreadFoodOdor(field.getNeighbour(to), mode, to, odor-1);
+			
+		}
 	}
 
 	@Override
@@ -34,7 +75,7 @@ public class Food extends Item {
 	}
 
 	@Override
-	public void stoneInteract() {
+	public void stoneInteract(Stone stone) {
 		// TODO Auto-generated method stub
 		
 	}

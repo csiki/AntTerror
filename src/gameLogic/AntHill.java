@@ -1,6 +1,6 @@
 package gameLogic;
 
-public class AntHill extends Item {
+public class AntHill extends Item { // ready
 
 	private Field spawnField;
 	private int timeBetweenRelease;
@@ -20,17 +20,18 @@ public class AntHill extends Item {
 		super(field);
 		this.spawnField = spawnField;
 		this.timeBetweenRelease = timeBetweenRelease;
-		this.countdownToRelease = 1;
+		this.countdownToRelease = 0;
 	}
 	
 	@Override
 	public void act() {
-		this.countdownToRelease--;
 		
-		if (this.countdownToRelease == 0) {
+		if (this.countdownToRelease <= 0) {
 			this.spawnField.register(new Ant(this.spawnField));
 			this.countdownToRelease = timeBetweenRelease;
 		}
+		
+		this.countdownToRelease--;
 	}
 	
 	@Override
