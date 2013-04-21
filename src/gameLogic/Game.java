@@ -41,6 +41,7 @@ public class Game {
 			
 			this.round++;
 			
+			this.waitTillNextRound();
 		}
 		
 	}
@@ -57,7 +58,7 @@ public class Game {
 			i.act();
 	}
 	
-	private void waitTillNextRound(){
+	private void waitTillNextRound() {
 		
 		// pause
 		while (this.paused);

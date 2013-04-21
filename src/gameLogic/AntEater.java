@@ -54,7 +54,6 @@ public class AntEater extends Item { // ready
 	
 	private Field chooseByOdor() { // TODO új fvény
 		
-		Field chosen = null;
 		Odor o = null;
 		int oddsSoFar = 0;
 		
