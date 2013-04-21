@@ -13,7 +13,7 @@ public class Field { // ready
 
 	private Vector<Field> neighbours = new Vector<Field>(6);
 	private Odor odor = new Odor();
-	private Item item = null;
+	public Item item = null; // TODO csak protoban public, egybk private
 	
 	Field() {}
 

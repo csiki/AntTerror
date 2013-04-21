@@ -1,9 +1,9 @@
 package gameLogic;
 
-public abstract class Spray {
+public abstract class Spray { // ready
 
-	private int charge;
-	private int radian;
+	protected int charge; // TODO megváltozott protected-re
+	protected int radian; // TODO megváltozott protected-re
 	
 	public Spray(int charge, int radian){
 		this.charge = charge;

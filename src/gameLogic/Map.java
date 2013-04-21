@@ -18,7 +18,7 @@ import java.util.*;
 	 
  ******/
 
-public class Map {
+public class Map { // ready
 
 	private int width;
 	private int height;
@@ -37,12 +37,24 @@ public class Map {
 
 	public Field getField(int x, int y) {
 
-		if (x >= this.width || y >= this.height)
+		if (x >= this.width || y >= this.height || x < 0 || y < 0)
 			return null;
 		
-		// TODO döntsétek el, hogy történjen a teszt és hogyan érjünk el egy fieldet koordináta alapján !
+		Field current = this.base;
 		
-		return null;
+		// step down
+		for (int row=0; row<x; ++row) {
+			if (row % 2 == 0)
+				current = current.getNeighbour(3);
+			else
+				current = current.getNeighbour(4);
+		}
+		
+		// step right
+		for (int col=0; col<y; ++col)
+			current = current.getNeighbour(2);
+		
+		return current;
 	}
 
 	public void decreaseAntOdor() {

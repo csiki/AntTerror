@@ -11,8 +11,8 @@ import java.util.*;
 public class Game {
 
 	private long round;
-	private boolean paused;
-	private int speed;
+	volatile private boolean paused;
+	volatile private int speed;
 	protected List<Spray> sprays; //!! minek ennek lista két féle van ? ezzel csak a szívás lesz, közben megoldottam de akkor is bazd meg
 	protected Map map;
 	protected MapCreator mapCreator;
@@ -29,14 +29,47 @@ public class Game {
 	}
 
 	public void startGame() {
-		// TODO
-	}
-	private void actItems(){
+		
+		this.map = this.mapCreator.createMap(100, 100, 0);
+		sprays.add(new KillerSpray(10, 5)); // TODO ezeket a konstansokat globalba !
+		sprays.add(new OdorNeutralizerSpray(10, 5)); // TODO ezeket a konstansokat globalba !
+		
+		while (!this.isGameEnded()) {
+			
+			this.actItems();
+			map.decreaseAntOdor();
+			
+			this.round++;
+			
+		}
 		
 	}
+	
+	private boolean isGameEnded() { // TODO új fvény!
+		
+		// TODO kitalálni
+		
+		return false;
+	}
+	
+	private void actItems(){
+		for (Item i : items)
+			i.act();
+	}
+	
 	private void waitTillNextRound(){
 		
+		// pause
+		while (this.paused);
+		
+		// roundtime
+		try {
+			Thread.sleep(1000 / speed);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
+	
 	public void protoTest() {
 		//A feladatkiírás szerint a prototípus célja, hogy bemutassa,
 		//a program elkészült, helyesen mûködik és minden feladatának elvégzésére képes.
@@ -54,8 +87,7 @@ public class Game {
 		try {
 			while (!exit) {
 				String[] comm = bf.readLine().split(" ");
-				switch(comm[0]){
-				case "newTest":
+				if (comm[0].equals("newTest")) {
 					//newTest <tesztmegnevezése>
 					//Leírás: Új tesztet indít. Kimenetet kiírja <tesztmegnevezése>.txt-be.
 					//Opciók: teszt megnevezése
@@ -77,31 +109,31 @@ public class Game {
 						file.createNewFile();
 						out = new BufferedWriter(new FileWriter(file));
 					}
-					break;
-				case "createMap":
+				}
+				else if (comm[0].equals("createMap")) {
 					//createMap <width> <height>
 					//Leírás: Csinál egy <width> x<height> méretû pályát
 					//Opciók: oszlopok száma, sorok száma
 
 					map = mapCreator.createMap(Integer.parseInt(comm[1]), Integer.parseInt(comm[2]), 0);
-					break;
-				case "createKillerSpray":
+				}
+				else if (comm[0].equals("createKillerSpray")) {
 					//createKillerSpray <charge> <radian>
 					//Leírás: Hangyaölõ spray létrehozása,
 					//meglehet adni a töltöttséget és a hatótávolságot
 					//Opciók: töltöttség, hatótávolság
 
 					sprays.add(0, new KillerSpray(Integer.parseInt(comm[1]), Integer.parseInt(comm[2])));
-					break;
-				case "createOdorSpray":
+				}
+				else if (comm[0].equals("createOdorSpray")) {
 					//createOdorSpray <charge> <radian>
 					//Leírás: Hangyaszag semlegesítõ spray létrehozása,
 					//meglehet adni a töltöttséget és a hatótávolságot
 					//Opciók: töltöttség, hatótávolság
 
 					sprays.add(1,new OdorNeutralizerSpray(Integer.parseInt(comm[1]), Integer.parseInt(comm[2])));
-					break;
-				case "addAnt":
+				}
+				else if (comm[0].equals("addAnt")) {
 					//addAnt <row> <column> <carry>
 					//Leírás: Csinál egy hangyát az adott mezõre,
 					//megadható hogy cipel-e ételt
@@ -118,8 +150,8 @@ public class Game {
 					};
 					items.add(ant);
 					actitems.add(ant);
-					break;
-				case "addAntEater":
+				}
+				else if (comm[0].equals("addAntEater")) {
 					//addAntEater <row> <column> <hunger>
 					//Leírás: Csinál egy hangyászsünt az adott mezõre,
 					//megadható hogy mennyire éhes
@@ -130,8 +162,8 @@ public class Game {
 					anteater.hunger= Integer.parseInt(comm[3]);
 					items.add(anteater);
 					actitems.add(anteater);
-					break;
-				case "addFood":
+				}
+				else if (comm[0].equals("addFood")) {
 					//addFood <row> <column>
 					//Leírás: Csinál egy ételt az adott mezõre
 					//Opciók: sorszám, oszlopszám
@@ -139,8 +171,8 @@ public class Game {
 					Food food = new Food(map.getField(Integer.parseInt(comm[1]), Integer.parseInt(comm[2]) ));
 					items.add(food);
 					actitems.add(food);
-					break;
-				case "addStone":
+				}
+				else if (comm[0].equals("addStone")) {
 					//addStone <row> <column>
 					//Leírás: Csinál egy követ az adott mezõre
 					//Opciók: sorszám, oszlopszám
@@ -148,8 +180,8 @@ public class Game {
 					Stone stone = new Stone(map.getField(Integer.parseInt(comm[1]), Integer.parseInt(comm[2]) ));
 					items.add(stone);
 					actitems.add(stone);
-					break;
-				case "addBarrier":
+				}
+				else if (comm[0].equals("addBarrier")) {
 					//addBarrier <row> <column>
 					//Leírás: Csinál egy akadályt az adott mezõre
 					//Opciók: sorszám, oszlopszám
@@ -157,8 +189,8 @@ public class Game {
 					Barrier barrier = new Barrier(map.getField(Integer.parseInt(comm[1]), Integer.parseInt(comm[2]) ));
 					items.add(barrier);
 					actitems.add(barrier);
-					break;
-				case "addAntLion":
+				}
+				else if (comm[0].equals("addAntLion")) {
 					//addAntLion <row> <column>  
 					//Leírás: Csinál egy hangyalesõt az adott mezõre
 					//Opciók: sorszám, oszlopszám
@@ -166,8 +198,8 @@ public class Game {
 					AntLion antlion = new AntLion(map.getField(Integer.parseInt(comm[1]), Integer.parseInt(comm[2]) ));
 					items.add(antlion);
 					actitems.add(antlion);
-					break;
-				case "addAntHill":
+				}
+				else if (comm[0].equals("addAntHill")) {
 					//addAntHill <row> <column> <passive>
 					//Leírás: Csinál egy hangyabolyt az adott mezõre,
 					//megadható hogy ne dobjon ki új hangyát, tehát ne lépjen semelyik körben
@@ -178,8 +210,8 @@ public class Game {
 					if(comm[3]=="0"){
 						actitems.add(anthill);
 					}
-					break;
-				case "addAntEaterColony":
+				}
+				else if (comm[0].equals("addAntEaterColony")) {
 					//addAntEaterColony <row> <column> <passive>
 					//Leírás: Csinál egy hangyászsün kolóniát az adott mezõre,
 					//megadható hogy ne dobjon ki új hangyászt, tehát ne lépjen semelyik körben
@@ -190,8 +222,8 @@ public class Game {
 					if(comm[3]=="0"){
 						actitems.add(colony);
 					}
-					break;
-				case "setAntOdor":
+				}
+				else if (comm[0].equals("setAntOdor")) {
 					//setAntOdor <row> <column> <antodor>
 					//Leírás: Beállítja az adott mezõn a hangyaszagot*
 					//Opciók: sorszám, oszlopszám, 0-1-2-3-4
@@ -199,8 +231,8 @@ public class Game {
 					//*antodor public legyen a protoban
 
 					map.getField(Integer.parseInt(comm[1]), Integer.parseInt(comm[2])).getOdor().ant = Integer.parseInt(comm[3]);
-					break;
-				case "actAllItem":
+				}
+				else if (comm[0].equals("actAllItem")) {
 					//actAllItem 
 					//Leírás: Lépteti az összes elemet a map-on, valamilyen sorrend szerint
 					//Opciók: -
@@ -210,8 +242,8 @@ public class Game {
 						Item item = (Item) iterator.next();
 						item.act();
 					}
-					break;
-				case "actItem":
+				}
+				else if (comm[0].equals("actItem")) {
 					//actItem <row> <column>
 					//Leírás: Lépteti az adott elemet a map-on
 					//Opciók: sorszám, oszlopszám
@@ -219,8 +251,8 @@ public class Game {
 					map.getField(Integer.parseInt(comm[1]), Integer.parseInt(comm[2])).item.act(); 
 					//!!hát ezt nem tudom mire vélni field-ben miért protected az item,
 					//!!ha mégis private akkor itt castolni kell, nem szép de itt elmegy
-					break;
-				case "showMap":
+				}
+				else if (comm[0].equals("showMap")) {
 					//showMap <map>
 					//Leírás: Kiírja a map tartalmát, lehet választani az Item-ek 
 					//és négy fajta Odor között
@@ -230,8 +262,8 @@ public class Game {
 					//!! itt érdemes lenne leellenõrizni hogy a megfelelõ mezõk egymás szomszédai-e ha nem akkor valami üzenet
 					//!! egyébként meg a map az nem nagy cucc
 					;
-					break;
-				case "useKillerSpray":
+				}
+				else if (comm[0].equals("useKillerSpray")) {
 					//useKillerSpray <row> <column>
 					//Leírás: Hangyaölõ spray használata az adott mezõ középpontjából
 					//Opciók: sorszám, oszlopszám
@@ -249,8 +281,8 @@ public class Game {
 							out.write("KillerSpray charge "+sprays.get(0).getCharge()+nl);
 						}
 					}
-					break;
-				case "useOdorSpray":
+				}
+				else if (comm[0].equals("useOdorSpray")) {
 					//useOdorSpray <row> <column>
 					//Leírás: Hangyaszag semlegesítõ spray használata az adott mezõ középpontjából
 					//Opciók: sorszám, oszlopszá
@@ -268,8 +300,8 @@ public class Game {
 							out.write("OdorSpray charge "+sprays.get(1).getCharge()+nl);
 						}
 					}
-					break;
-				case "exit":
+				}
+				else if (comm[0].equals("exit")) {
 					//exit
 					//Leírás: kilépés a programból
 					//Opciók: -
@@ -278,8 +310,9 @@ public class Game {
 						out.close();
 					}
 					exit = true;
-					break;
-				default:  System.out.println("Hibás parancs");
+				}
+				else {
+					System.out.println("Hibás parancs");
 				}
 			}
 		} catch (IOException e) {
@@ -367,8 +400,8 @@ public class Game {
 		f1.register(ant);
 		f2.register(ant2);
 		
-		f1.addNeighbour(f2);
-		f2.addNeighbour(f1);
+		f1.addNeighbour(f2,3);
+		f2.addNeighbour(f1,0);
 		
 		ant.act();
 	}
@@ -382,8 +415,8 @@ public class Game {
 		f1.register(ant);
 		f2.register(ae);
 		
-		f1.addNeighbour(f2);
-		f2.addNeighbour(f1);
+		f1.addNeighbour(f2,3);
+		f2.addNeighbour(f1,0);
 		
 		ant.act();
 	}
@@ -397,8 +430,8 @@ public class Game {
 		f1.register(ant);
 		f2.register(ac);
 		
-		f1.addNeighbour(f2);
-		f2.addNeighbour(f1);
+		f1.addNeighbour(f2,3);
+		f2.addNeighbour(f1,0);
 		
 		ant.act();
 	}
@@ -412,8 +445,8 @@ public class Game {
 		f1.register(ant);
 		f2.register(ah);
 		
-		f1.addNeighbour(f2);
-		f2.addNeighbour(f1);
+		f1.addNeighbour(f2,3);
+		f2.addNeighbour(f1,0);
 		
 		ant.act();
 	}
@@ -427,8 +460,8 @@ public class Game {
 		f1.register(ant);
 		f2.register(al);
 		
-		f1.addNeighbour(f2);
-		f2.addNeighbour(f1);
+		f1.addNeighbour(f2,3);
+		f2.addNeighbour(f1,0);
 		
 		ant.act();
 	}
@@ -442,8 +475,8 @@ public class Game {
 		f1.register(ant);
 		f2.register(b);
 		
-		f1.addNeighbour(f2);
-		f2.addNeighbour(f1);
+		f1.addNeighbour(f2,3);
+		f2.addNeighbour(f1,0);
 		
 		ant.act();
 	}
@@ -457,8 +490,8 @@ public class Game {
 		f1.register(ant);
 		f2.register(food);
 		
-		f1.addNeighbour(f2);
-		f2.addNeighbour(f1);
+		f1.addNeighbour(f2,3);
+		f2.addNeighbour(f1,0);
 		
 		ant.act();
 	}
@@ -470,8 +503,8 @@ public class Game {
 		
 		f1.register(ant);
 		
-		f1.addNeighbour(f2);
-		f2.addNeighbour(f1);
+		f1.addNeighbour(f2,3);
+		f2.addNeighbour(f1,0);
 		
 		ant.act();
 	}
@@ -485,8 +518,8 @@ public class Game {
 		f1.register(antEater);
 		f2.register(a);
 		
-		f1.addNeighbour(f2);
-		f2.addNeighbour(f1);
+		f1.addNeighbour(f2,3);
+		f2.addNeighbour(f1,0);
 		
 		antEater.act();
 	}
@@ -500,8 +533,8 @@ public class Game {
 		f1.register(antEater);
 		f2.register(ae);
 		
-		f1.addNeighbour(f2);
-		f2.addNeighbour(f1);
+		f1.addNeighbour(f2,3);
+		f2.addNeighbour(f1,0);
 		
 		antEater.act();
 	}
@@ -515,8 +548,8 @@ public class Game {
 		f1.register(antEater);
 		f2.register(ac);
 		
-		f1.addNeighbour(f2);
-		f2.addNeighbour(f1);
+		f1.addNeighbour(f2,3);
+		f2.addNeighbour(f1,0);
 		
 		antEater.act();
 	}
@@ -530,8 +563,8 @@ public class Game {
 		f1.register(antEater);
 		f2.register(ah);
 		
-		f1.addNeighbour(f2);
-		f2.addNeighbour(f1);
+		f1.addNeighbour(f2,3);
+		f2.addNeighbour(f1,0);
 		
 		antEater.act();
 	}
@@ -545,8 +578,8 @@ public class Game {
 		f1.register(antEater);
 		f2.register(al);
 		
-		f1.addNeighbour(f2);
-		f2.addNeighbour(f1);
+		f1.addNeighbour(f2,3);
+		f2.addNeighbour(f1,0);
 		
 		antEater.act();
 	}
@@ -560,8 +593,8 @@ public class Game {
 		f1.register(antEater);
 		f2.register(b);
 		
-		f1.addNeighbour(f2);
-		f2.addNeighbour(f1);
+		f1.addNeighbour(f2,3);
+		f2.addNeighbour(f1,0);
 		
 		antEater.act();
 	}
@@ -575,8 +608,8 @@ public class Game {
 		f1.register(antEater);
 		f2.register(food);
 		
-		f1.addNeighbour(f2);
-		f2.addNeighbour(f1);
+		f1.addNeighbour(f2,3);
+		f2.addNeighbour(f1,0);
 		
 		antEater.act();
 	}
@@ -588,8 +621,8 @@ public class Game {
 		
 		f1.register(antEater);
 		
-		f1.addNeighbour(f2);
-		f2.addNeighbour(f1);
+		f1.addNeighbour(f2,3);
+		f2.addNeighbour(f1,0);
 		
 		antEater.act();
 	}

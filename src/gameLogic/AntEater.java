@@ -6,7 +6,7 @@ import java.util.Random;
 
 public class AntEater extends Item { // ready
 
-	private int hunger;
+	public int hunger; // TODO csak protoban public, egybk private
 	private Field nbField = null;
 	private int fromWhere; // TODO új attibrútum!
 	

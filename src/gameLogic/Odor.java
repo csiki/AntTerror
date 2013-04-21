@@ -16,7 +16,7 @@ public class Odor { // ready
 		this.colony = 0;
 	}
 	
-	private int ant = 0; //csak a protoban, egyébként private
+	public int ant = 0; // TODO csak protoban public, egybk private
 	private int food = 0;
 	private int hill = 0;
 	private int colony = 0;

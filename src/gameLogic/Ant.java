@@ -6,8 +6,8 @@ import java.util.Random;
 
 public class Ant extends Item { // ready
 
-	private boolean carry = false;
-	private Food carriedItem = null;
+	public boolean carry = false; // TODO csak protoban public, egybk private
+	public Food carriedItem = null; // TODO csak protoban public, egybk privates
 	private Field nbField = null;
 	
 	Ant(Field field) {
@@ -57,7 +57,10 @@ public class Ant extends Item { // ready
 			this.nbField = this.field.getNeighbour(i);
 			if (this.nbField != null) {
 				o = this.nbField.getOdor();
-				oddsSoFar += o.getAnt();
+				if (this.carry)
+					oddsSoFar += o.getHill();
+				else
+					oddsSoFar += o.getAnt() + 2*o.getFood(); // two times food odor !
 				odds.put(this.nbField, oddsSoFar);
 			}
 		}

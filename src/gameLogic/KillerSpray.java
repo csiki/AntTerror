@@ -8,8 +8,8 @@ public class KillerSpray extends Spray { // ready
 
 	@Override
 	public void mechanism(Field field) {
-		this.spreadKiller(field, 3, 0, 5);
-		// TODO 5öt Game final static globalba!
+		this.charge--;
+		this.spreadKiller(field, 3, 0, this.radian);
 	}
 	
 	private void spreadKiller(Field field, int mode, int to, int power) { // TODO új fvény
