@@ -10,36 +10,31 @@ public class OdorNeutralizerSpray extends Spray { // ready
 	@Override
 	public void mechanism(Field field) {
 		this.charge--;
-		this.spreadNeutralizer(field, 3, 0, this.radian);
+		this.spreadNeutralizer(field, 2, 0, this.radian);
 	}
 	
 	private void spreadNeutralizer(Field field, int mode, int to, int power) { // TODO új fvény
-		if (power == 0)
+		if (power < 0)
 			return;
 		
-		int negativeAntOdor = field.getOdor().getAnt() * (-1);
-		field.dropOdor(new Odor(negativeAntOdor, 0, 0, 0)); // drop negative ant odor
+		field.setAntOdor(0);
 		
-		if (mode == 3) {
-			
-			for (int i=0; i<6; ++i)
-				if (field.getNeighbour(i) != null)
-					spreadNeutralizer(field.getNeighbour(i), mode-1, to, power-1);
-			
-		} else if (mode == 2) {
-			
-			if (field.getNeighbour(to) != null) // forward, inherit mode 2
-				spreadNeutralizer(field.getNeighbour(to), mode, to, power-1);
-			
-			to = (to == 0) ? to = 5 : to - 1;
-			if (field.getNeighbour(to) != null) // to the left, mode-1
-				spreadNeutralizer(field.getNeighbour(to), mode-1, to, power-1);
-			
+		if (mode == 2) {
+			for (int nb=0; nb<6; ++nb) {
+				if (field.getNeighbour(nb) != null)
+					spreadNeutralizer(field.getNeighbour(nb), mode-1, nb, power-1);
+			}
 		} else if (mode == 1) {
+			// 0
+			spreadNeutralizer(field.getNeighbour(to), mode, to, power-1);
 			
-			if (field.getNeighbour(to) != null) // forward, inherit mode 1
-				spreadNeutralizer(field.getNeighbour(to), mode, to, power-1);
+			// +1
+			to = (to + 1) % 6;
+			spreadNeutralizer(field.getNeighbour(to), mode, to, power-1);
 			
+			// -1
+			to = to-1 < 0 ? 5 : to-1;
+			spreadNeutralizer(field.getNeighbour(to), mode, to, power-1);
 		}
 	}
 

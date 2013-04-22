@@ -5,7 +5,6 @@ public class AntEaterColony extends Item { // ready
 	private Field spawnField;
 	private int timeBetweenRelease;
 	private int countdownToRelease;
-	private boolean firstRound = true; // TODO új attibrútum
 	
 	AntEaterColony(Field field) {
 		super(field);
@@ -15,6 +14,8 @@ public class AntEaterColony extends Item { // ready
 		this.spawnField = this.field.getNeighbour(i);
 		this.timeBetweenRelease = 10;
 		this.countdownToRelease = 0;
+		
+		this.spreadColonyOdor(this.field, 100); // 100 odor to spread
 	}
 	
 	AntEaterColony(Field field, int timeBetweenRelease, Field spawnField) {
@@ -22,6 +23,8 @@ public class AntEaterColony extends Item { // ready
 		this.spawnField = spawnField;
 		this.timeBetweenRelease = timeBetweenRelease;
 		this.countdownToRelease = 0;
+		
+		this.spreadColonyOdor(this.field, 100); // 100 odor to spread
 	}
 	
 	@Override
@@ -31,12 +34,6 @@ public class AntEaterColony extends Item { // ready
 		if (this.countdownToRelease <= 0) {
 			this.spawnField.register(new AntEater(this.spawnField));
 			this.countdownToRelease = timeBetweenRelease;
-		}
-		
-		// spread odor
-		if (this.firstRound) {
-			this.firstRound = false;
-			this.spreadColonyOdor(this.field, 3, 0, 100); // 100 odor to spread
 		}
 		
 		this.countdownToRelease--;
@@ -49,33 +46,19 @@ public class AntEaterColony extends Item { // ready
 	 * @param from direction of the food
 	 * @param odor amount of food odor to drop
 	 */
-	private void spreadColonyOdor(Field field, int mode, int to, int odor) { // TODO új fvény!
+	private void spreadColonyOdor(Field field, int odor) { // TODO új fvény!
 		
 		if (odor <= 0)
 			return;
 		
-		field.dropOdor(new Odor(0, 0, 0, odor));
+		if (field != null && field.getOdor().getColony() < odor)
+			field.setColonyOdor(odor);
+		else
+			return;
 		
-		if (mode == 3) {
-			
-			for (int i=0; i<6; ++i)
-				if (field.getNeighbour(i) != null)
-					spreadColonyOdor(field.getNeighbour(i), mode-1, i, odor-1);
-			
-		} else if (mode == 2) {
-			
-			if (field.getNeighbour(to) != null) // forward, inherit mode 2
-				spreadColonyOdor(field.getNeighbour(to), mode, to, odor-1);
-			
-			to = (to == 0) ? to = 5 : to - 1;
-			if (field.getNeighbour(to) != null) // to the left, mode-1
-				spreadColonyOdor(field.getNeighbour(to), mode-1, to, odor-1);
-			
-		} else if (mode == 1) {
-			
-			if (field.getNeighbour(to) != null) // forward, inherit mode 1
-				spreadColonyOdor(field.getNeighbour(to), mode, to, odor-1);
-			
+		for (int nb=0; nb<6; ++nb) {
+			if (field.getNeighbour(nb) != null)
+				spreadColonyOdor(field.getNeighbour(nb), odor-1);
 		}
 	}
 	

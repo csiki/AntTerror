@@ -16,10 +16,10 @@ public class Odor { // ready
 		this.colony = 0;
 	}
 	
-	public int ant = 0; // TODO csak protoban public, egybk private
-	private int food = 0;
-	private int hill = 0;
-	private int colony = 0;
+	public Integer ant = 0; // TODO csak protoban public, egybk private
+	private Integer food = 0;
+	private Integer hill = 0;
+	private Integer colony = 0;
 
 	public int getAnt() {
 		return this.ant;
@@ -35,6 +35,22 @@ public class Odor { // ready
 
 	public int getColony() {
 		return this.colony;
+	}
+	
+	public void setFood(int odor) {
+		this.food = odor;
+	}
+	
+	public void setColony(int odor) {
+		this.colony = odor;
+	}
+	
+	public void setHill(int odor) {
+		this.hill = odor;
+	}
+	
+	public void setAnt(int odor) {
+		this.ant = odor;
 	}
 
 }

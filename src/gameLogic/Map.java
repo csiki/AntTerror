@@ -1,6 +1,5 @@
 package gameLogic;
 
-import java.util.*;
 
 /******
 	
@@ -22,21 +21,57 @@ public class Map { // ready
 
 	private int width;
 	private int height;
-	private Field base; // TODO új attibrútum
-	private List<Field> fields = new ArrayList<Field>();
+	//private Field base; // TODO új attibrútum
+	//private List<Field> fields = new ArrayList<Field>();
+	private Field[][] fields = null;
 	
-	Map(int width, int height, Field base) {
+	Map(int width, int height) {
 		this.width = width;
 		this.height = height;
-		this.base = base;
+		fields = new Field[height][width];
+		for (int r=0; r<height; ++r){
+			for (int c=0; c<width; ++ c){
+				fields[r][c] = new Field();
+			}
+		}
+		for (int r=0; r<height; ++r){
+			for (int c=0; c<width; ++ c){
+				if(r%2==0){
+					fields[r][c].addNeighbour(this.getField(r-1, c-1), 0);
+					fields[r][c].addNeighbour(this.getField(r-1, c), 1);
+					fields[r][c].addNeighbour(this.getField(r, c+1), 2);
+					fields[r][c].addNeighbour(this.getField(r+1, c), 3);
+					fields[r][c].addNeighbour(this.getField(r+1, c-1), 4);
+					fields[r][c].addNeighbour(this.getField(r, c-1), 5);
+				}
+				else{
+					fields[r][c].addNeighbour(this.getField(r-1, c), 0);
+					fields[r][c].addNeighbour(this.getField(r-1, c+1), 1);
+					fields[r][c].addNeighbour(this.getField(r, c+1), 2);
+					fields[r][c].addNeighbour(this.getField(r+1, c+1), 3);
+					fields[r][c].addNeighbour(this.getField(r+1, c), 4);
+					fields[r][c].addNeighbour(this.getField(r, c-1), 5);
+				}
+			}
+		}
+				
 	}
 	
 	public void addField(Field field) {
-		this.fields.add(field);
+		//this.fields.add(field);
 	}
 
 	public Field getField(int x, int y) {
-
+		
+		if (y >= this.width || x >= this.height || x < 0 || y < 0)
+		{
+			return null;
+		}
+		else
+		{
+			return fields[x][y];
+		}
+		/*
 		if (x >= this.width || y >= this.height || x < 0 || y < 0)
 			return null;
 		
@@ -54,13 +89,14 @@ public class Map { // ready
 		for (int col=0; col<y; ++col)
 			current = current.getNeighbour(2);
 		
-		return current;
+		return current;*/
 	}
 
 	public void decreaseAntOdor() {
 		
-		for (Field f : this.fields)
-			f.decreaseAntOdor();
+		for (int r=0; r<height; ++r)
+			for (int c=0; c<width; ++ c)
+				fields[r][c].decreaseAntOdor();
 		
 	}
 

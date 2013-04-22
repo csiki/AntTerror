@@ -14,19 +14,14 @@ public class Field { // ready
 	private Odor odor = new Odor();
 	public Item item = null; // TODO csak protoban public, egybk private
 	
-	Field() {}
+	Field() {
+		for (int i=0; i<6; ++i)
+			neighbours.add(null);
+	}
 
 	public void decreaseAntOdor() {
-		int ant, food, hill, colony;
-		
-		ant = this.odor.getAnt();
-		food = this.odor.getFood();
-		hill = this.odor.getHill();
-		colony = this.odor.getColony();
-		
-		ant = (ant <= 0) ? (ant=0) : --ant; // ant odor decreased
-		
-		this.odor = new Odor(ant, food, hill, colony);
+		int newOdor = this.odor.getAnt() == 0 ? 0 : this.odor.getAnt() - 1;
+		this.odor.setAnt(newOdor);
 	}
 
 	public void register(Item item) {
@@ -63,5 +58,21 @@ public class Field { // ready
 		
 		this.odor = new Odor(ant, food, hill, colony);
 	}
-
+	
+	
+	public void setFoodOdor(int odor) {
+		this.odor.setFood(odor);
+	}
+	
+	public void setColonyOdor(int odor) {
+		this.odor.setColony(odor);
+	}
+	
+	public void setHillOdor(int odor) {
+		this.odor.setHill(odor);
+	}
+	
+	public void setAntOdor(int odor) {
+		this.odor.setAnt(odor);
+	}
 }

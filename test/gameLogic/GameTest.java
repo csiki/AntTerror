@@ -105,26 +105,26 @@ public class GameTest {
 						+ "showMap item"+nl
 						+ "showMap antodor"+nl
 						+ "exit"+nl;
-			/*newTest hangyaMozgasa
-			createMap 6 6
-			addAnt 1 1 0
-			addFood 5 2
-			setAntOdor 2 2 4
-			showMap item
-			showMap antodor
-			actAllItem
-			setAntOdor 3 2 4
-			showMap item
-			showMap antodor
-			actAllItem
-			setAntOdor 4 2 3
-			setAntOdor 4 3 4
-			showMap item
-			showMap antodor
-			actAllItem
-			showMap item
-			showMap antodor
-			exit*/
+/*newTest hangyaMozgasa
+createMap 6 6
+addAnt 1 1 0
+addFood 5 2
+setAntOdor 2 2 4
+showMap item
+showMap antodor
+actAllItem
+setAntOdor 3 2 4
+showMap item
+showMap antodor
+actAllItem
+setAntOdor 4 2 3
+setAntOdor 4 3 4
+showMap item
+showMap antodor
+actAllItem
+showMap item
+showMap antodor
+exit*/
 			System.setIn(new ByteArrayInputStream(commands.getBytes()));
 			game.protoTest();
 			expected = 
@@ -150,7 +150,7 @@ public class GameTest {
 				+	" 0 0 F 0 0 0" + nl
 				+	"----------------" + nl
 				+	"0 0 0 0 0 0" + nl
-				+	" 0 4 0 0 0 0" + nl
+				+	" 0 3 0 0 0 0" + nl
 				+	"0 0 4 0 0 0" + nl
 				+	" 0 0 4 0 0 0" + nl
 				+	"0 0 0 0 0 0" + nl
@@ -164,8 +164,8 @@ public class GameTest {
 				+	" 0 0 F 0 0 0" + nl
 				+	"----------------" + nl
 				+	"0 0 0 0 0 0" + nl
-				+	" 0 3 0 0 0 0" + nl
-				+	"0 0 4 0 0 0" + nl
+				+	" 0 2 0 0 0 0" + nl
+				+	"0 0 3 0 0 0" + nl
 				+	" 0 0 4 0 0 0" + nl
 				+	"0 0 3 4 0 0" + nl
 				+	" 0 0 0 0 0 0" + nl
@@ -178,9 +178,9 @@ public class GameTest {
 				+	" 0 0 F 0 0 0" + nl
 				+	"----------------" + nl
 				+	"0 0 0 0 0 0" + nl
-				+	" 0 2 0 0 0 0" + nl
-				+	"0 0 3 0 0 0" + nl
-				+	" 0 0 4 0 0 0" + nl
+				+	" 0 1 0 0 0 0" + nl
+				+	"0 0 2 0 0 0" + nl
+				+	" 0 0 3 0 0 0" + nl
 				+	"0 0 2 4 0 0" + nl
 				+	" 0 0 0 0 0 0" + nl
 				+	"----------------" + nl;
@@ -256,14 +256,14 @@ public class GameTest {
 						+ "actAllItem"+nl
 						+ "showMap item"+nl
 						+ "exit"+nl;
-			/*newTest hangyaEtel
-			createMap 6 6
-			addAnt 1 0 0
-			addFood 1 1
-			showMap item
-			actAllItem
-			showMap item
-			exit*/
+/*newTest hangyaEtel
+createMap 6 6
+addAnt 1 0 0
+addFood 1 1
+showMap item
+actAllItem
+showMap item
+exit*/
 			System.setIn(new ByteArrayInputStream(commands.getBytes()));
 			game.protoTest();
 			expected =
@@ -306,21 +306,23 @@ public class GameTest {
 		commands = "newTest hangyaBlokk"+nl
 						+ "createMap 6 6"+nl
 						+ "addAnt 0 0 0"+nl
+						+ "addStone 0 1"+nl
 						+ "addFood 0 3"+nl
 						+ "showMap item"+nl
 						+ "actAllItem"+nl
+						+ "actAllItem"+nl
 						+ "showMap item"+nl
 						+ "exit"+nl;
-			/*newTest hangyaBlokk
-			createMap 6 6
-			addAnt 0 0 0
-			addStone 0 1
-			addFood 0 3
-			showMap item
-			actAllItem
-			actAllItem
-			showMap item
-			exit*/
+/*newTest hangyaBlokk
+createMap 6 6
+addAnt 0 0 0
+addStone 0 1
+addFood 0 3
+showMap item
+actAllItem
+actAllItem
+showMap item
+exit*/
 			System.setIn(new ByteArrayInputStream(commands.getBytes()));
 			game.protoTest();
 			expected =
@@ -498,20 +500,18 @@ public class GameTest {
 						+ "createMap 6 6"+nl
 						+ "addAnt 0 0 0"+nl
 						+ "addAntEater 0 1 3"+nl
-						+ "addFood 0 3"+nl
 						+ "showMap item"+nl
 						+ "actAllItem"+nl
 						+ "showMap item"+nl
 						+ "exit"+nl;
-			/*newTest hangyaszsunHangya
-			createMap 6 6
-			addAnt 0 0 0
-			addAntEater 0 1 3
-			addFood 0 3
-			showMap item
-			actItem 0 1
-			showMap item
-			exit*/
+/*newTest hangyaszsunHangya
+createMap 6 6
+addAnt 0 0 0
+addAntEater 0 1 3
+showMap item
+actItem 0 1
+showMap item
+exit*/
 			System.setIn(new ByteArrayInputStream(commands.getBytes()));
 			game.protoTest();
 			expected =
@@ -561,16 +561,16 @@ public class GameTest {
 						+ "actAllItem"+nl
 						+ "showMap item"+nl
 						+ "exit"+nl;
-			/*newTest hangyaszsunKavics
-			createMap 6 6
-			addAntEater 0 0 0
-			addStone 0 1
-			addStone 0 2
-			addAntEaterColony 0 4 1
-			showMap item
-			actAllItem
-			showMap item
-			exit*/
+/*newTest hangyaszsunKavics
+createMap 6 6
+addAntEater 0 0 0
+addStone 0 1
+addStone 0 2
+addAntEaterColony 0 4 1
+showMap item
+actAllItem
+showMap item
+exit*/
 			System.setIn(new ByteArrayInputStream(commands.getBytes()));
 			game.protoTest();
 			expected =
@@ -610,25 +610,26 @@ public class GameTest {
 		//Rövid leírás	A pályán elhelyezünk egy hangyászsünt és egy õt blokkoló dolgot (pl. hangyalesõ). A sünnek tudnia kell kikerülni ezt a dolgot.
 		//Teszt célja	Leellenõrizni, hogy a hangyászsün ki tud kerülni egy akadályt.
 
-		commands = "newTesthangyaszsunBlokk"+nl
+		commands = "newTest hangyaszsunBlokk"+nl
 						+ "createMap 6 6"+nl
 						+ "addAntEater 0 0 0"+nl
 						+ "addAntLion 0 1"+nl
 						+ "addAntEaterColony 0 4 1"+nl
 						+ "showMap item"+nl
 						+ "actAllItem"+nl
+						+ "actAllItem"+nl
 						+ "showMap item"+nl
 						+ "exit"+nl;
-			/*newTest hangyaszsunBlokk
-			createMap 6 6
-			addAntEater 0 0 0
-			addAntLion 0 1
-			addAntEaterColony 0 4 1
-			showMap item
-			actAllItem
-			actAllItem
-			showMap item
-			exit*/
+/*newTest hangyaszsunBlokk
+createMap 6 6
+addAntEater 0 0 0
+addAntLion 0 1
+addAntEaterColony 0 4 1
+showMap item
+actAllItem
+actAllItem
+showMap item
+exit*/
 			System.setIn(new ByteArrayInputStream(commands.getBytes()));
 			game.protoTest();
 			expected =
@@ -683,20 +684,20 @@ public class GameTest {
 						+ "useKillerSpray 1 1"+nl
 						+ "showMap item"+nl
 						+ "exit"+nl;
-			/*newTest hangyaIrtoSpray
-			createMap 6 6
-			createKillerSpray 2 1
-			addAnt 0 0 0
-			addAnt 0 1 0
-			addAnt 0 2 0
-			addAnt 0 3 0
-			addAnt 1 3 0
-			addAnt 1 1 0
-			addAnt 2 2 0
-			addAnt 3 2 0
-			showMap item
-			useKillerSpray 1 1
-			showMap item
+/*newTest hangyaIrtoSpray
+createMap 6 6
+createKillerSpray 2 1
+addAnt 0 0 0
+addAnt 0 1 0
+addAnt 0 2 0
+addAnt 0 3 0
+addAnt 1 3 0
+addAnt 1 1 0
+addAnt 2 2 0
+addAnt 3 2 0
+showMap item
+useKillerSpray 1 1
+showMap item
 			exit*/
 			System.setIn(new ByteArrayInputStream(commands.getBytes()));
 			game.protoTest();

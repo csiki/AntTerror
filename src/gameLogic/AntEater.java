@@ -1,14 +1,11 @@
 package gameLogic;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
-
 public class AntEater extends Item { // ready
 
 	public int hunger; // TODO csak protoban public, egybk private
 	private Field nbField = null;
 	private int fromWhere; // TODO új attibrútum!
+	int[] odds;
 	
 	AntEater(Field field) {
 		super(field);
@@ -38,11 +35,16 @@ public class AntEater extends Item { // ready
 	@Override
 	public void act() {
 		
-		this.nbField = this.chooseByOdor();
-		
-		if (this.nbField != null) {
-			ItemManagableByItem i = this.nbField.getItem();
+		this.chooseByOdor();
+		this.nbField = null;
+		while (this.field != this.nbField && this.field != null) {
+
+			this.nbField = getNextBestChoiceNb();
+			if (this.nbField == null)
+				break;
 			
+			ItemManagableByItem i = this.nbField.getItem();
+				
 			if (i != null)
 				i.antEaterInteract(this);
 			else {
@@ -52,41 +54,55 @@ public class AntEater extends Item { // ready
 		}
 	}
 	
-	private Field chooseByOdor() { // TODO új fvény
+	
+	private void chooseByOdor() { // TODO új fvény
 		
 		Odor o = null;
-		int oddsSoFar = 0;
+		int oddsSoFar;
+		Field f;
 		
 		/// calculate odds
-		Map<Field, Integer> odds = new HashMap<Field, Integer>();
+		odds = new int[6];
+		for (int i=0; i<6; ++i)
+			odds[i] = -1;
+		
 		for (int i=0; i<6; ++i) {
-			this.nbField = this.field.getNeighbour(i);
-			if (this.nbField != null) {
-				o = this.nbField.getOdor();
-				if (this.hunger <= 0) // if not hungry, goes to colony
-					oddsSoFar += o.getColony();
+			oddsSoFar = 0;
+			
+			f = this.field.getNeighbour(i);
+			
+			if (f != null) {
+				o = f.getOdor();
+				
+				if (this.hunger <= 0)
+					oddsSoFar = o.getColony();
 				else
-					oddsSoFar += o.getAnt();
-				odds.put(this.nbField, oddsSoFar);
-			} else { // fromWhere got to be recovered <-- odds.size() = neighbours.size()
-				odds.put(null, 0);
+					oddsSoFar = o.getAnt();
+				odds[i] = oddsSoFar;
 			}
 		}
-		
-		/// rand
-		Random gen = new Random();
-		int randomNum = gen.nextInt(oddsSoFar);
-		this.fromWhere = 0;
-		
-		for (Map.Entry<Field, Integer> entry : odds.entrySet()) {
-			if (randomNum <= entry.getValue()) {
-				return entry.getKey();
-			}
-			this.fromWhere++;
-		}
-		
-		return null; // cannot happen
 	}
+	
+	private Field getNextBestChoiceNb() {
+		
+		int maxOdds = 0;
+		
+		for (int i=0; i<6; ++i) {
+			
+			if (this.odds[i] > maxOdds) {
+				maxOdds = this.odds[i];
+				this.fromWhere = i;
+			}
+		}
+		
+		if (maxOdds == -1)
+			return null;
+			
+		this.odds[this.fromWhere] = -1;
+		
+		return this.field.getNeighbour(fromWhere);
+	}
+	
 
 	@Override
 	public void antInteract(Ant ant) {
@@ -96,7 +112,18 @@ public class AntEater extends Item { // ready
 
 	@Override
 	public void antEaterInteract(AntEater antEater) {
-		// nothing happens here
+		this.nbField = getNextBestChoiceNb();
+		
+		if (this.nbField != null) {
+			ItemManagableByItem i = this.nbField.getItem();
+				
+			if (i != null)
+				i.antEaterInteract(this);
+			else {
+				this.dereg();
+				this.reg();
+			}
+		}
 	}
 
 	@Override
@@ -106,7 +133,18 @@ public class AntEater extends Item { // ready
 
 	@Override
 	public void stoneInteract(Stone stone) {
-		// nothing happens here
+		this.nbField = getNextBestChoiceNb();
+		
+		if (this.nbField != null) {
+			ItemManagableByItem i = this.nbField.getItem();
+				
+			if (i != null)
+				i.antEaterInteract(this);
+			else {
+				this.dereg();
+				this.reg();
+			}
+		}
 	}
 	
 	public int getFromWhere() { // TODO új fvény!
@@ -116,7 +154,6 @@ public class AntEater extends Item { // ready
 	private void reg() { // TODO új fvény!
 		this.nbField.register(this);
 		this.field = this.nbField;
-		this.nbField = null;
 	}
 	
 	private void dereg() { // TODO új fvény

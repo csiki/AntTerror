@@ -4,8 +4,10 @@ public class MapCreator {
 
 	public Map createMap(int width, int height, int difficulty) {
 		
+		Map map = new Map(width, height);
+		return map;
 		// whatever the difficulty is
-		Field[][] fields = new Field[height][width];
+		/*Field[][] fields = new Field[height][width];
 		
 		for (int r=0; r<height; ++r)
 			for (int c=0; c<width; ++ c)
@@ -13,7 +15,8 @@ public class MapCreator {
 		
 		Map map = new Map(width, height, fields[0][0]);
 		
-		// connect fields
+
+		
 		for (int r=0; r<height; ++r) {
 			for (int c=0; c<width; ++c) {
 				
@@ -39,7 +42,7 @@ public class MapCreator {
 			}	
 		}
 		
-		return map;
+		return map;*/
 	}
 
 }

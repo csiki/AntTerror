@@ -29,40 +29,40 @@ public class Game {
 	}
 
 	public void startGame() {
-		
+
 		this.map = this.mapCreator.createMap(100, 100, 0);
 		sprays.add(new KillerSpray(10, 5)); // TODO ezeket a konstansokat globalba !
 		sprays.add(new OdorNeutralizerSpray(10, 5)); // TODO ezeket a konstansokat globalba !
-		
+
 		while (!this.isGameEnded()) {
-			
+
 			this.actItems();
 			map.decreaseAntOdor();
-			
+
 			this.round++;
-			
+
 			this.waitTillNextRound();
 		}
-		
+
 	}
-	
+
 	private boolean isGameEnded() { // TODO új fvény!
-		
+
 		// TODO kitalálni
-		
+
 		return false;
 	}
-	
+
 	private void actItems(){
 		for (Item i : items)
 			i.act();
 	}
-	
+
 	private void waitTillNextRound() {
-		
+
 		// pause
 		while (this.paused);
-		
+
 		// roundtime
 		try {
 			Thread.sleep(1000 / speed);
@@ -95,9 +95,8 @@ public class Game {
 					
 					map = null;
 					sprays = new ArrayList<Spray>(2);
-					items = null;
-					actitems = new ArrayList<Item>();
-					
+					items = new ArrayList<Item>();
+					actitems = new ArrayList<Item>();			
 					//fájlba írás nem vizsgálja hogy létezik-e már ilyen nevû
 					if(out==null){
 						file = new File(System.getProperty("user.dir")+"\\prototest\\"+comm[1]+".txt");
@@ -115,7 +114,7 @@ public class Game {
 					//createMap <width> <height>
 					//Leírás: Csinál egy <width> x<height> méretû pályát
 					//Opciók: oszlopok száma, sorok száma
-
+					
 					map = mapCreator.createMap(Integer.parseInt(comm[1]), Integer.parseInt(comm[2]), 0);
 				}
 				else if (comm[0].equals("createKillerSpray")) {
@@ -131,7 +130,8 @@ public class Game {
 					//Leírás: Hangyaszag semlegesítõ spray létrehozása,
 					//meglehet adni a töltöttséget és a hatótávolságot
 					//Opciók: töltöttség, hatótávolság
-
+					
+					sprays.add(new KillerSpray(2,2));
 					sprays.add(1,new OdorNeutralizerSpray(Integer.parseInt(comm[1]), Integer.parseInt(comm[2])));
 				}
 				else if (comm[0].equals("addAnt")) {
@@ -142,14 +142,12 @@ public class Game {
 					//hangya carriedItem carry adattagja public lett a protoban
 					
 					Ant ant = new Ant(map.getField(Integer.parseInt(comm[1]), Integer.parseInt(comm[2]) ));
-					if(comm[3]=="1"){
-						Field field = new Field();
-						Food food = new Food(field);
-						field.deregister();
-						ant.carriedItem = food;
+					if(comm[3].equals("1")){
+						ant.carriedItem = new Food(null);
 						ant.carry = true;
 					};
 					items.add(ant);
+					map.getField(Integer.parseInt(comm[1]), Integer.parseInt(comm[2])).register(ant);
 					actitems.add(ant);
 				}
 				else if (comm[0].equals("addAntEater")) {
@@ -162,6 +160,7 @@ public class Game {
 					AntEater anteater = new AntEater(map.getField(Integer.parseInt(comm[1]), Integer.parseInt(comm[2]) ));
 					anteater.hunger= Integer.parseInt(comm[3]);
 					items.add(anteater);
+					map.getField(Integer.parseInt(comm[1]), Integer.parseInt(comm[2])).register(anteater);
 					actitems.add(anteater);
 				}
 				else if (comm[0].equals("addFood")) {
@@ -171,6 +170,7 @@ public class Game {
 					
 					Food food = new Food(map.getField(Integer.parseInt(comm[1]), Integer.parseInt(comm[2]) ));
 					items.add(food);
+					map.getField(Integer.parseInt(comm[1]), Integer.parseInt(comm[2])).register(food);
 					actitems.add(food);
 				}
 				else if (comm[0].equals("addStone")) {
@@ -180,6 +180,7 @@ public class Game {
 					
 					Stone stone = new Stone(map.getField(Integer.parseInt(comm[1]), Integer.parseInt(comm[2]) ));
 					items.add(stone);
+					map.getField(Integer.parseInt(comm[1]), Integer.parseInt(comm[2])).register(stone);
 					actitems.add(stone);
 				}
 				else if (comm[0].equals("addBarrier")) {
@@ -189,6 +190,7 @@ public class Game {
 					
 					Barrier barrier = new Barrier(map.getField(Integer.parseInt(comm[1]), Integer.parseInt(comm[2]) ));
 					items.add(barrier);
+					map.getField(Integer.parseInt(comm[1]), Integer.parseInt(comm[2])).register(barrier);
 					actitems.add(barrier);
 				}
 				else if (comm[0].equals("addAntLion")) {
@@ -198,6 +200,7 @@ public class Game {
 					
 					AntLion antlion = new AntLion(map.getField(Integer.parseInt(comm[1]), Integer.parseInt(comm[2]) ));
 					items.add(antlion);
+					map.getField(Integer.parseInt(comm[1]), Integer.parseInt(comm[2])).register(antlion);
 					actitems.add(antlion);
 				}
 				else if (comm[0].equals("addAntHill")) {
@@ -208,6 +211,7 @@ public class Game {
 					
 					AntHill anthill = new AntHill(map.getField(Integer.parseInt(comm[1]), Integer.parseInt(comm[2]) ));
 					items.add(anthill);
+					map.getField(Integer.parseInt(comm[1]), Integer.parseInt(comm[2])).register(anthill);
 					if(comm[3]=="0"){
 						actitems.add(anthill);
 					}
@@ -220,6 +224,7 @@ public class Game {
 					
 					AntEaterColony colony = new AntEaterColony(map.getField(Integer.parseInt(comm[1]), Integer.parseInt(comm[2]) ));
 					items.add(colony);
+					map.getField(Integer.parseInt(comm[1]), Integer.parseInt(comm[2])).register(colony);
 					if(comm[3]=="0"){
 						actitems.add(colony);
 					}
@@ -237,12 +242,13 @@ public class Game {
 					//actAllItem 
 					//Leírás: Lépteti az összes elemet a map-on, valamilyen sorrend szerint
 					//Opciók: -
-					
+					map.decreaseAntOdor();
 					for (Iterator<Item> iterator = actitems.iterator(); iterator
 							.hasNext();) {
 						Item item = (Item) iterator.next();
 						item.act();
 					}
+					
 				}
 				else if (comm[0].equals("actItem")) {
 					//actItem <row> <column>
@@ -262,7 +268,119 @@ public class Game {
 					//!!ezt nem írom meg mert ehhez kell a createMap
 					//!! itt érdemes lenne leellenõrizni hogy a megfelelõ mezõk egymás szomszédai-e ha nem akkor valami üzenet
 					//!! egyébként meg a map az nem nagy cucc
-					;
+
+					//!! itt nem csináltam meg a fileba írást
+					if(comm[1].equals("item")){
+					for (int i = 0; i < map.getHeight(); i++) {
+						if(i%2==1){
+							System.out.print(" ");
+						}
+						for (int j = 0; j <  map.getWidth(); j++) {
+							if(map.getField(i, j).item==null){
+								System.out.print("0");
+							}
+							else {
+								if (map.getField(i, j).item.getClass().getName().equals("gameLogic.Ant"))
+								{
+									if(((Ant)map.getField(i, j).item).carry){
+										System.out.print("B");
+									}
+									else{
+										System.out.print("A");
+									}
+								}
+								else if (map.getField(i, j).item.getClass().getName().equals("gameLogic.AntEater"))
+									System.out.print("E");
+								
+								else if (map.getField(i, j).item.getClass().getName().equals("gameLogic.Food"))
+									System.out.print("F");
+								
+								else if (map.getField(i, j).item.getClass().getName().equals("gameLogic.AntLion"))
+									System.out.print("L");
+	
+								else if (map.getField(i, j).item.getClass().getName().equals("gameLogic.AntEaterColony"))
+									System.out.print("C");
+	
+								else if (map.getField(i, j).item.getClass().getName().equals("gameLogic.AntHill"))
+									System.out.print("H");
+	
+								else if (map.getField(i, j).item.getClass().getName().equals("gameLogic.Barrier"))
+									System.out.print("Z");
+	
+								else if (map.getField(i, j).item.getClass().getName().equals("gameLogic.Stone"))
+									System.out.print("S");
+								}
+								if(j<(map.getWidth()-1))
+									System.out.print(" ");
+							}
+							System.out.print(nl);
+						}
+					}
+					else if(comm[1].equals("antodor")){
+						for (int i = 0; i < map.getHeight(); i++) {
+							if(i%2==1){
+								System.out.print(" ");
+							}
+							for (int j = 0; j <  map.getWidth(); j++) {
+								
+								System.out.print(map.getField(i, j).getOdor().getAnt());
+								if(j<(map.getWidth()-1)){
+									System.out.print(" ");
+								}
+							}
+							System.out.print(nl);
+							
+						}
+					}
+					else if(comm[1].equals("foododor")){
+						for (int i = 0; i < map.getHeight(); i++) {
+							if(i%2==1){
+								System.out.print("  ");
+							}
+							for (int j = 0; j <  map.getWidth(); j++) {
+								
+								System.out.print(map.getField(i, j).getOdor().getFood());
+								if(j<(map.getWidth()-1)){
+									System.out.print("  ");
+								}
+							}
+							System.out.print(nl);
+							
+						}
+					}
+					else if(comm[1].equals("hillodor")){
+						for (int i = 0; i < map.getHeight(); i++) {
+							if(i%2==1){
+								System.out.print(" ");
+							}
+							for (int j = 0; j <  map.getWidth(); j++) {
+								
+								System.out.print(map.getField(i, j).getOdor().getHill());
+								if(j<(map.getWidth()-1)){
+									System.out.print(" ");
+								}
+							}
+							System.out.print(nl);
+							
+						}
+					}
+					else if(comm[1].equals("colonyodor")){
+						for (int i = 0; i < map.getHeight(); i++) {
+							if(i%2==1){
+								System.out.print(" ");
+							}
+							for (int j = 0; j <  map.getWidth(); j++) {
+								
+								System.out.print(map.getField(i, j).getOdor().getColony());
+								if(j<(map.getWidth()-1)){
+									System.out.print(" ");
+								}
+							}
+							System.out.print(nl);
+							
+						}
+					}
+					System.out.println("----------------");
 				}
 				else if (comm[0].equals("useKillerSpray")) {
 					//useKillerSpray <row> <column>
@@ -271,6 +389,7 @@ public class Game {
 					
 					if(sprays.get(0).getCharge()==0){
 						System.out.println("KillerSpray is empty");
+						System.out.println("----------------");
 						if(out!=null){
 							out.write("KillerSpray is empty"+nl);
 						}
@@ -278,6 +397,7 @@ public class Game {
 					else{
 						sprays.get(0).mechanism(map.getField(Integer.parseInt(comm[1]), Integer.parseInt(comm[2])));
 						System.out.println("KillerSpray charge "+sprays.get(0).getCharge());
+						System.out.println("----------------");
 						if(out!=null){
 							out.write("KillerSpray charge "+sprays.get(0).getCharge()+nl);
 						}
@@ -292,11 +412,13 @@ public class Game {
 						System.out.println("OdorSpray is empty");
 						if(out!=null){
 							out.write("OdorSpray is empty"+nl);
+							System.out.println("----------------");
 						}
 					}
 					else{
 						sprays.get(1).mechanism(map.getField(Integer.parseInt(comm[1]), Integer.parseInt(comm[2])));
-						System.out.println("odorSpray charge "+sprays.get(1).getCharge());
+						System.out.println("OdorSpray charge "+sprays.get(1).getCharge());
+						System.out.println("----------------");
 						if(out!=null){
 							out.write("OdorSpray charge "+sprays.get(1).getCharge()+nl);
 						}

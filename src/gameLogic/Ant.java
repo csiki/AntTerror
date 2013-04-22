@@ -1,17 +1,15 @@
 package gameLogic;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
-
 public class Ant extends Item { // ready
 
 	public boolean carry = false; // TODO csak protoban public, egybk private
 	public Food carriedItem = null; // TODO csak protoban public, egybk privates
 	private Field nbField = null;
+	int[] odds;
 	
 	Ant(Field field) {
 		super(field);
+		this.field.setAntOdor(4);
 	}
 	
 	public void eaten() {
@@ -32,10 +30,17 @@ public class Ant extends Item { // ready
 
 	@Override
 	public void act() {
-		this.nbField = this.chooseByOdor();
-		if (this.nbField != null) {
-			ItemManagableByItem i = this.nbField.getItem();
+		
+		this.chooseByOdor();
+		this.nbField = null;
+		while (this.field != this.nbField && this.field != null) {
+
+			this.nbField = getNextBestChoiceNb();
+			if (this.nbField == null)
+				break;
 			
+			ItemManagableByItem i = this.nbField.getItem();
+				
 			if (i != null)
 				i.antInteract(this);
 			else {
@@ -45,42 +50,59 @@ public class Ant extends Item { // ready
 		}
 	}
 	
-	private Field chooseByOdor() { // TODO új fvény
+	private void chooseByOdor() { // TODO új fvény
 		
 		Odor o = null;
-		int oddsSoFar = 0;
+		int oddsSoFar;
+		Field f;
 		
 		/// calculate odds
-		Map<Field, Integer> odds = new HashMap<Field, Integer>();
+		odds = new int[6];
+		for (int i=0; i<6; ++i)
+			odds[i] = -1;
+		
 		for (int i=0; i<6; ++i) {
-			this.nbField = this.field.getNeighbour(i);
-			if (this.nbField != null) {
-				o = this.nbField.getOdor();
+			oddsSoFar = 0;
+			
+			f = this.field.getNeighbour(i);
+			
+			if (f != null) {
+				o = f.getOdor();
+				
 				if (this.carry)
-					oddsSoFar += o.getHill();
+					oddsSoFar = o.getHill();
 				else
-					oddsSoFar += o.getAnt() + 2*o.getFood(); // two times food odor !
-				odds.put(this.nbField, oddsSoFar);
+					oddsSoFar = o.getAnt() + 5*o.getFood();
+				odds[i] = oddsSoFar;
+			}
+		}
+	}
+	
+	private Field getNextBestChoiceNb() {
+		
+		int maxOdds = 0;
+		int maxIndex = 0;
+		
+		for (int i=0; i<6; ++i) {
+			
+			if (this.odds[i] > maxOdds) {
+				maxOdds = this.odds[i];
+				maxIndex = i;
 			}
 		}
 		
-		/// rand
-		Random gen = new Random();
-		int randomNum = gen.nextInt(oddsSoFar);
+		if (maxOdds == -1)
+			return null;
+			
+		this.odds[maxIndex] = -1;
 		
-		for (Map.Entry<Field, Integer> entry : odds.entrySet()) {
-			if (randomNum <= entry.getValue()) {
-				return entry.getKey();
-			}
-		}
-		
-		return null; // cannot happen
+		return this.field.getNeighbour(maxIndex);
 	}
 	
 	private void reg() { // TODO új fvény!
 		this.nbField.register(this);
 		this.field = this.nbField;
-		this.nbField = null;
+		this.field.setAntOdor(4);
 	}
 	
 	private void dereg() { // TODO új fvény

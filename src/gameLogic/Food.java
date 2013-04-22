@@ -2,19 +2,16 @@ package gameLogic;
 
 public class Food extends Item { // ready
 	
-	private boolean firstRound = true; // TODO új attibrútum
-	
 	Food(Field field) {
 		super(field);
+		
+		this.spreadFoodOdor(this.field, 80); // 80 odor to spread
+		// TODO az ilyen konstansokat Game public statikus final változokká !
 	}
 
 	@Override
 	public void act() {
-		if (this.firstRound) {
-			this.firstRound = false;
-			this.spreadFoodOdor(this.field, 3, 0, 100); // 100 odor to spread
-			// TODO az ilyen konstansokat Game public statikus final változokká !
-		}
+		// nothing happens here
 	}
 	
 	/**
@@ -24,40 +21,24 @@ public class Food extends Item { // ready
 	 * @param from direction of the food
 	 * @param odor amount of food odor to drop
 	 */
-	private void spreadFoodOdor(Field field, int mode, int to, int odor) { // TODO új fvény!
+	private void spreadFoodOdor(Field field, int odor) { // TODO új fvény!
 		
 		if (odor <= 0)
 			return;
 		
-		field.dropOdor(new Odor(0, odor, 0, 0));
+		if (field != null && field.getOdor().getFood() < odor)
+			field.setFoodOdor(odor);
+		else
+			return;
 		
-		if (mode == 3) {
-			
-			for (int i=0; i<6; ++i)
-				if (field.getNeighbour(i) != null)
-					spreadFoodOdor(field.getNeighbour(i), mode-1, i, odor-1);
-			
-		} else if (mode == 2) {
-			
-			if (field.getNeighbour(to) != null) // forward, inherit mode 2
-				spreadFoodOdor(field.getNeighbour(to), mode, to, odor-1);
-			
-			to = (to == 0) ? to = 5 : to - 1;
-			if (field.getNeighbour(to) != null) // to the left, mode-1
-				spreadFoodOdor(field.getNeighbour(to), mode-1, to, odor-1);
-			
-		} else if (mode == 1) {
-			
-			if (field.getNeighbour(to) != null) // forward, inherit mode 1
-				spreadFoodOdor(field.getNeighbour(to), mode, to, odor-1);
-			
+		for (int nb=0; nb<6; ++nb) {
+			if (field.getNeighbour(nb) != null)
+				spreadFoodOdor(field.getNeighbour(nb), odor-1);
 		}
 	}
 
 	@Override
 	public void antInteract(Ant ant) {
-		System.out.println("\ti - antInteract(ant)");
-		System.out.println("\t\ts - deregister()");
 		this.field.deregister();
 		
 		ant.pickup(this);
@@ -65,19 +46,17 @@ public class Food extends Item { // ready
 
 	@Override
 	public void antEaterInteract(AntEater antEater) {
-		System.out.println("\ti - antEaterInteract(hs)");
-		
+		// nothing happens here
 	}
 
 	@Override
 	public void killerSprayInteract() {
-		// TODO Auto-generated method stub
+		// nothing happens here
 	}
 
 	@Override
 	public void stoneInteract(Stone stone) {
-		// TODO Auto-generated method stub
-		
+		// nothing happens here
 	}
 
 }
