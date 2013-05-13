@@ -12,10 +12,16 @@ public class Food extends Item { // ready
 	@Override
 	public void act() {
 		this.spreadFoodOdor(this.field, 80);
+		
+		// check if disappeared
+		if (this.field != null && this.field.getItem() == null)
+			this.field = null;
 	}
 	
 	public void dropped(Field newField) { // TODO új fvény
-		this.field.deregister();
+		if (this.field != null) {
+			this.field.deregister();
+		}
 		this.field = newField;
 		
 		if (newField != null) {
@@ -45,6 +51,7 @@ public class Food extends Item { // ready
 			if (field.getNeighbour(nb) != null)
 				spreadFoodOdor(field.getNeighbour(nb), odor-1);
 		}
+		
 	}
 
 	@Override

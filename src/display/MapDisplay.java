@@ -67,17 +67,17 @@ public class MapDisplay {
 		
 		// charge background
 		g2.setColor(Color.white);
-		g2.fillRect(this.displaySize.width - 160, this.displaySize.height - 90, 300, 50);
+		g2.fillRect(this.displaySize.width - 110, this.displaySize.height - 50, 300, 50);
 		
 		// killer
 		Integer charge = this.sprays.get(0).getCharge();
 		g2.setColor(Color.red);
-		g2.drawString(charge.toString(), this.displaySize.width - 150, this.displaySize.height - 50);
+		g2.drawString(charge.toString(), this.displaySize.width - 100, this.displaySize.height - 10);
 		
 		// odorneutralizer
 		charge = this.sprays.get(1).getCharge();
 		g2.setColor(Color.green);
-		g2.drawString(charge.toString(), this.displaySize.width - 70, this.displaySize.height - 50);
+		g2.drawString(charge.toString(), this.displaySize.width - 50, this.displaySize.height - 10);
 	}
 	
 	public Point calculateClickedField(Point p) {

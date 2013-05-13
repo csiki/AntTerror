@@ -18,7 +18,7 @@ public class Ant extends Item { // ready
 	}
 	
 	public void eaten() {
-		this.dropFood();
+		this.dropFood(this.field);
 		this.dereg();
 	}
 
@@ -80,7 +80,7 @@ public class Ant extends Item { // ready
 				if (this.carry)
 					oddsSoFar = o.getHill();
 				else
-					oddsSoFar = o.getAnt() + 6*o.getFood();
+					oddsSoFar = o.getAnt() + 5*o.getFood();
 				odds[i] = oddsSoFar;
 			}
 		}
@@ -101,8 +101,8 @@ public class Ant extends Item { // ready
 				if (odds[i] == -1)
 					randomOdds[i] = -1;
 				else {
-					randomOdds[i] = sum + odds[i] * 50; // TODO
-					sum += odds[i] * 50;
+					randomOdds[i] = sum + odds[i] * 200;
+					sum += odds[i] * 100;
 				}
 			}
 			
@@ -143,17 +143,22 @@ public class Ant extends Item { // ready
 		return index;
 	}
 	
-	private void dropFood() { // TODO új metódus
+	private boolean dropFood(Field from) { // TODO új metódus
 		if (this.carry) { // drop food
 			for (int i=0; i<6; ++i) {
-				if (this.field.getNeighbour(i) != null) {
-					if (this.field.getNeighbour(i).getItem() == null) {
-						this.field.getNeighbour(i).register(this.carriedItem);
-						this.carriedItem.dropped(this.field.getNeighbour(i));
+				if (from.getNeighbour(i) != null) {
+					if (from.getNeighbour(i).getItem() == null) {
+						from.getNeighbour(i).register(this.carriedItem);
+						this.carriedItem.dropped(from.getNeighbour(i));
+						return true;
 					}
 				}
 			}
+			
+			// couldn't drop
+			this.carriedItem.dropped(null);
 		}
+		return false;
 	}
 	
 	private void reg() { // TODO új fvény!
@@ -174,14 +179,14 @@ public class Ant extends Item { // ready
 
 	@Override
 	public void antEaterInteract(AntEater antEater) {
-		this.dropFood();
+		this.dropFood(this.field);
 		this.dereg();
 		antEater.eat();
 	}
 
 	@Override
 	public void killerSprayInteract() {
-		this.dropFood();
+		this.dropFood(this.field);
 		this.dereg();
 	}
 

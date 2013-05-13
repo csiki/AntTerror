@@ -28,7 +28,7 @@ public class Display extends JPanel implements DisplayRefreshable { // ready
 		else if (state == 2)
 			this.scoreD.display(g, 150, 100);
 		else
-			this.voidD.display(g, 0, 0);
+			this.voidD.display(g, 300, 200);
 	}
 	
 	public void displayComponent(int state) {

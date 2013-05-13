@@ -4,6 +4,8 @@ import java.io.File;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import controll.Control;
+
 import display.DisplayRefreshable;
 
 public class Game implements Runnable, Spawner {
@@ -16,12 +18,13 @@ public class Game implements Runnable, Spawner {
 	private MapCreator mapCreator;
 	private List<Item> items;
 	private DisplayRefreshable display;
+	private Control control;
 	
 	public Game(DisplayRefreshable display) {
 		this.display = display;
 		round = 0;
 		paused = false;
-		speed = 5;
+		speed = 30;
 		mapCreator = new MapCreator();
 		map = null;
 		sprays = new ArrayList<Spray>(2);
@@ -44,6 +47,7 @@ public class Game implements Runnable, Spawner {
 			this.waitTillNextRound();
 		}
 		
+		this.control.gameEnded();
 		this.display.gameEnded(this.round);
 	}
 	
@@ -61,6 +65,10 @@ public class Game implements Runnable, Spawner {
 	public void sprayUsed(int sprayIndex, int x, int y) {
 		if (sprayIndex < this.sprays.size())
 			this.sprays.get(sprayIndex).mechanism(this.map.getField(x, y));
+	}
+	
+	public void setControl(Control control) {
+		this.control = control;
 	}
 	
 	private void removeDeadItems() {

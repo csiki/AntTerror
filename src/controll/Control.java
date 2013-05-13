@@ -50,6 +50,7 @@ public class Control {
 	public Control(Game game, Display display) {
 		this.game = game;
 		this.display = display;
+		this.game.setControl(this);
 		initialize();
 	}
 
@@ -108,8 +109,7 @@ public class Control {
 		});
 		this.display.addComponentListener(new ComponentAdapter() {
 		    @Override
-		    public void componentResized(ComponentEvent e)
-		    {
+		    public void componentResized(ComponentEvent e) {
 		        display.repaint();
 		    }
 		});
@@ -117,6 +117,13 @@ public class Control {
 		frame.getContentPane().add(this.display, BorderLayout.CENTER);
 		
 		this.frame.setVisible(true);
+	}
+	
+	public void gameEnded() { // called by Game
+		menuStartGame.setEnabled(true);
+		menuPauseGame.setEnabled(false);
+		checkMenuKillerSpray.setEnabled(false);
+		checkMenuOdorneutralizer.setEnabled(false);
 	}
 	
 	private Point calculateClickedField(Point p) {
