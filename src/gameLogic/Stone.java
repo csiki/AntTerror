@@ -1,5 +1,8 @@
 package gameLogic;
 
+import display.MapElementDisplay;
+import display.StoneDisplay;
+
 public class Stone extends Item { // ready
 	
 	private Field nbField = null;
@@ -20,13 +23,6 @@ public class Stone extends Item { // ready
 		// nothing happens here
 	}
 	
-	/*******
-	 0 1   
-	5 I 2
-	 4 3
-	
-	if comesFrom=5 --> futherTo=2 ...
-	 *******/
 	
 	@Override
 	public void antEaterInteract(AntEater antEater) {
@@ -84,5 +80,15 @@ public class Stone extends Item { // ready
 	private void dereg() { // TODO új fvény
 		this.field.deregister();
 		this.field = null;
+	}
+
+	@Override
+	public MapElementDisplay getDisplay() {
+		return StoneDisplay.getInstance();
+	}
+
+	@Override
+	public boolean isThereAnyFood() {
+		return false;
 	}
 }

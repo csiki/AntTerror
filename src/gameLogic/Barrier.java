@@ -1,5 +1,8 @@
 package gameLogic;
 
+import display.BarrierDisplay;
+import display.MapElementDisplay;
+
 public class Barrier extends Item { // ready
 
 	Barrier(Field field) {
@@ -29,6 +32,16 @@ public class Barrier extends Item { // ready
 	@Override
 	public void stoneInteract(Stone stone) {
 		// nothing happens here
+	}
+
+	@Override
+	public MapElementDisplay getDisplay() {
+		return BarrierDisplay.getInstance();
+	}
+
+	@Override
+	public boolean isThereAnyFood() {
+		return false;
 	}
 
 }

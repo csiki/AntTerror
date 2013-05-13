@@ -8,12 +8,14 @@ public class KillerSpray extends Spray { // ready
 
 	@Override
 	public void mechanism(Field field) {
-		this.charge--;
-		this.spreadKiller(field, 2, 0, this.radian);
+		if (this.charge > 0) {
+			this.spreadKiller(field, 2, 0, this.radian);
+			this.charge--;
+		}
 	}
 	
 	private void spreadKiller(Field field, int mode, int to, int power) { // TODO új fvény
-		if (power < 0)
+		if (power < 0 || field == null)
 			return;
 		
 		if (field.getItem() != null)

@@ -1,17 +1,27 @@
 package gameLogic;
 
+import display.FoodDisplay;
+import display.MapElementDisplay;
+
 public class Food extends Item { // ready
 	
 	Food(Field field) {
 		super(field);
-		
-		this.spreadFoodOdor(this.field, 80); // 80 odor to spread
-		// TODO az ilyen konstansokat Game public statikus final változokká !
 	}
 
 	@Override
 	public void act() {
-		// nothing happens here
+		this.spreadFoodOdor(this.field, 80);
+	}
+	
+	public void dropped(Field newField) { // TODO új fvény
+		this.field.deregister();
+		this.field = newField;
+		
+		if (newField != null) {
+			newField.register(this);
+			this.spreadFoodOdor(newField, 80);
+		}
 	}
 	
 	/**
@@ -39,9 +49,10 @@ public class Food extends Item { // ready
 
 	@Override
 	public void antInteract(Ant ant) {
-		this.field.deregister();
-		
-		ant.pickup(this);
+		if (!ant.isThereAnyFood()) { // cannot carry more than 1
+			this.field.deregister();
+			ant.pickup(this);
+		}
 	}
 
 	@Override
@@ -57,6 +68,16 @@ public class Food extends Item { // ready
 	@Override
 	public void stoneInteract(Stone stone) {
 		// nothing happens here
+	}
+
+	@Override
+	public MapElementDisplay getDisplay() {
+		return FoodDisplay.getInstance();
+	}
+
+	@Override
+	public boolean isThereAnyFood() {
+		return true;
 	}
 
 }

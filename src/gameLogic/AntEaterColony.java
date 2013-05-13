@@ -1,28 +1,34 @@
 package gameLogic;
 
+import display.ColonyDisplay;
+import display.MapElementDisplay;
+
 public class AntEaterColony extends Item { // ready
 
 	private Field spawnField;
 	private int timeBetweenRelease;
 	private int countdownToRelease;
+	private Spawner spawner;
 	
-	AntEaterColony(Field field) {
+	AntEaterColony(Field field, Spawner spawner) {
 		super(field);
 		int i = 0;
 		while (this.field.getNeighbour(i) == null) ++i;
 		
 		this.spawnField = this.field.getNeighbour(i);
-		this.timeBetweenRelease = 10;
+		this.timeBetweenRelease = 60;
 		this.countdownToRelease = 0;
+		this.spawner = spawner;
 		
 		this.spreadColonyOdor(this.field, 100); // 100 odor to spread
 	}
 	
-	AntEaterColony(Field field, int timeBetweenRelease, Field spawnField) {
+	AntEaterColony(Field field, int timeBetweenRelease, Field spawnField, Spawner spawner) {
 		super(field);
 		this.spawnField = spawnField;
 		this.timeBetweenRelease = timeBetweenRelease;
 		this.countdownToRelease = 0;
+		this.spawner = spawner;
 		
 		this.spreadColonyOdor(this.field, 100); // 100 odor to spread
 	}
@@ -32,7 +38,9 @@ public class AntEaterColony extends Item { // ready
 
 		// spawn
 		if (this.countdownToRelease <= 0) {
-			this.spawnField.register(new AntEater(this.spawnField));
+			AntEater ae = new AntEater(this.spawnField);
+			this.spawnField.register(ae);
+			this.spawner.spawnItem(ae);
 			this.countdownToRelease = timeBetweenRelease;
 		}
 		
@@ -80,6 +88,16 @@ public class AntEaterColony extends Item { // ready
 	@Override
 	public void stoneInteract(Stone stone) {
 		// nothing happens here
+	}
+
+	@Override
+	public MapElementDisplay getDisplay() {
+		return ColonyDisplay.getInstance();
+	}
+
+	@Override
+	public boolean isThereAnyFood() {
+		return false;
 	}
 
 }

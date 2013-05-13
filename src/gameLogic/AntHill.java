@@ -1,12 +1,16 @@
 package gameLogic;
 
+import display.HillDisplay;
+import display.MapElementDisplay;
+
 public class AntHill extends Item { // ready
 
 	private Field spawnField;
 	private int timeBetweenRelease;
 	private int countdownToRelease;
+	private Spawner spawner;
 	
-	AntHill(Field field) {
+	AntHill(Field field, Spawner spawner) {
 		super(field);
 		int i = 0;
 		while (this.field.getNeighbour(i) == null) ++i;
@@ -14,15 +18,17 @@ public class AntHill extends Item { // ready
 		this.spawnField = this.field.getNeighbour(i);
 		this.timeBetweenRelease = 10;
 		this.countdownToRelease = 0;
+		this.spawner = spawner;
 		
 		this.spreadAntHillOdor(this.field, 100); // 100 odor to spread
 	}
 	
-	AntHill(Field field, int timeBetweenRelease, Field spawnField) {
+	AntHill(Field field, int timeBetweenRelease, Field spawnField, Spawner spawner) {
 		super(field);
 		this.spawnField = spawnField;
 		this.timeBetweenRelease = timeBetweenRelease;
 		this.countdownToRelease = 0;
+		this.spawner = spawner;
 		
 		this.spreadAntHillOdor(this.field, 100); // 100 odor to spread
 	}
@@ -32,7 +38,10 @@ public class AntHill extends Item { // ready
 		
 		// spawn
 		if (this.countdownToRelease <= 0) {
-			this.spawnField.register(new Ant(this.spawnField));
+			Ant a = new Ant(this.spawnField);
+			this.spawnField.register(a);
+			this.spawner.spawnItem(a);
+			
 			this.countdownToRelease = timeBetweenRelease;
 		}
 		
@@ -80,6 +89,16 @@ public class AntHill extends Item { // ready
 	@Override
 	public void stoneInteract(Stone stone) {
 		// nothing happens here
+	}
+
+	@Override
+	public MapElementDisplay getDisplay() {
+		return HillDisplay.getInstance();
+	}
+
+	@Override
+	public boolean isThereAnyFood() {
+		return false;
 	}
 
 }

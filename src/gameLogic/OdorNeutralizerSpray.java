@@ -9,12 +9,14 @@ public class OdorNeutralizerSpray extends Spray { // ready
 
 	@Override
 	public void mechanism(Field field) {
-		this.charge--;
-		this.spreadNeutralizer(field, 2, 0, this.radian);
+		if (this.charge > 0) {
+			this.spreadNeutralizer(field, 2, 0, this.radian);
+			this.charge--;
+		}
 	}
 	
 	private void spreadNeutralizer(Field field, int mode, int to, int power) { // TODO új fvény
-		if (power < 0)
+		if (power < 0 || field == null)
 			return;
 		
 		field.setAntOdor(0);

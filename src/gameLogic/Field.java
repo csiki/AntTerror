@@ -2,17 +2,12 @@ package gameLogic;
 
 import java.util.Vector;
 
-/***********
-	 0 1   
-	5 I 2
-	 4 3
- ***********/
 
 public class Field { // ready
 
 	private Vector<Field> neighbours = new Vector<Field>(6);
 	private Odor odor = new Odor();
-	public Item item = null; // TODO csak protoban public, egybk private
+	private Item item = null; 
 	
 	Field() {
 		for (int i=0; i<6; ++i)
@@ -22,6 +17,7 @@ public class Field { // ready
 	public void decreaseAntOdor() {
 		int newOdor = this.odor.getAnt() == 0 ? 0 : this.odor.getAnt() - 1;
 		this.odor.setAnt(newOdor);
+		this.odor.setFood(0);
 	}
 
 	public void register(Item item) {

@@ -1,5 +1,8 @@
 package gameLogic;
 
+import display.AntLionDisplay;
+import display.MapElementDisplay;
+
 
 public class AntLion extends Item { // ready
 
@@ -30,5 +33,15 @@ public class AntLion extends Item { // ready
 	@Override
 	public void stoneInteract(Stone stone) {
 		// nothing happens here
+	}
+
+	@Override
+	public MapElementDisplay getDisplay() {
+		return AntLionDisplay.getInstance();
+	}
+
+	@Override
+	public boolean isThereAnyFood() {
+		return false;
 	}
 }

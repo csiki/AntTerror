@@ -7,6 +7,10 @@ public abstract class Item implements ItemManagableByItem { // ready
 	Item(Field field) {
 		this.field = field;
 	}
+	
+	public Field getField() { // TODO új metódus !!!
+		return this.field;
+	}
 
 	public abstract void act();
 	
@@ -16,6 +20,7 @@ public abstract class Item implements ItemManagableByItem { // ready
 
 	public abstract void killerSprayInteract();
 	
-	public abstract void stoneInteract(Stone stone); // TODO változtatás: +argumentum
+	public abstract void stoneInteract(Stone stone);
 	
+	public abstract boolean isThereAnyFood();
 }
