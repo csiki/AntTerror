@@ -36,5 +36,4 @@ public class ScoreDisplay {
 		g2.drawString(" - Bátor András", x+100, y+300);
 		g2.drawString(" - Tóth Viktor", x+100, y+350);
 	}
-	
 }

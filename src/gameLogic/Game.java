@@ -21,7 +21,7 @@ public class Game implements Runnable, Spawner {
 		this.display = display;
 		round = 0;
 		paused = false;
-		speed = 15;
+		speed = 5;
 		mapCreator = new MapCreator();
 		map = null;
 		sprays = new ArrayList<Spray>(2);
